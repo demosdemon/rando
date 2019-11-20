@@ -7,13 +7,21 @@ import unittest
 import rando
 
 
-def not_so_random(iterable):
-    it = itertools.cycle(iterable)
+class NotSoRandom(object):
+    def __init__(self, iterable):
+        self.iterator = itertools.cycle(iterable)
 
-    def rng():
-        return next(it)
+    def __repr__(self):
+        return "NotSoRandom"
 
-    return rng
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        return next(self.iterator)
+
+    __call__ = __next__
+    next = __next__
 
 
 class TestRando(unittest.TestCase):
@@ -69,7 +77,10 @@ class TestRando(unittest.TestCase):
 
     def test_custom_generator(self):
         weights = [("ITEM_A", 1), ("ITEM_B", 1)]
-        rng = rando.Rando(weights, not_so_random([0.25, 0.75]))
+        rng = rando.Rando(weights, NotSoRandom([0.25, 0.75]))
+        self.assertEqual(
+            repr(rng), "Rando([('ITEM_A', 0.5), ('ITEM_B', 0.5)], NotSoRandom)"
+        )
         self.assertEqual("ITEM_A", next(rng))
         self.assertEqual("ITEM_B", next(rng))
         self.assertEqual("ITEM_A", next(rng))
@@ -83,7 +94,10 @@ class TestRando(unittest.TestCase):
 
     def test_invalid_generator(self):
         weights = [("ITEM_A", 1), ("ITEM_B", 1)]
-        rng = rando.Rando(weights, not_so_random([1]))
+        rng = rando.Rando(weights, NotSoRandom([1]))
+        self.assertEqual(
+            repr(rng), "Rando([('ITEM_A', 0.5), ('ITEM_B', 0.5)], NotSoRandom)"
+        )
         with self.assertRaises(RuntimeError):
             next(rng)
 
