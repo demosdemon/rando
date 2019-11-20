@@ -63,6 +63,12 @@ class TestRando(unittest.TestCase):
         self.assertEqual("ITEM_A", next(rng))
         self.assertEqual("ITEM_B", next(rng))
 
+    def test_invalid_generator(self):
+        weights = [("ITEM_A", 1), ("ITEM_B", 1)]
+        rng = rando.Rando(weights, not_so_random([1]))
+        with self.assertRaises(RuntimeError):
+            next(rng)
+
 
 if __name__ == "__main__":
     unittest.main()
