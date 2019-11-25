@@ -4,6 +4,6 @@ rando is a weighted random generator.
 
 ## TODO
 
-* [ ] Distribute on PyPi
+* [x] Distribute on PyPi
 * [ ] Add usage instructions
 
