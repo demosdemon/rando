@@ -20,8 +20,3 @@ jobs:
     - name: Test with unittest
       run: |
         python test_rando.py
-    - name: Upload artifact
-      uses: actions/upload-artifact@v1
-      with:
-        name: dist
-        path: dist
